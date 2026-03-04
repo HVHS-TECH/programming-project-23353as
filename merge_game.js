@@ -4,7 +4,8 @@ let gameOver = false;
 let dangerStartTime = null;
 let dangerDuration = 2000;
 let score = 0;
-
+let randomSize
+const RANDOM_SIZE = [50, 70, 90];
 
 function setup() {
     console.log("setup");
@@ -16,20 +17,26 @@ function setup() {
     ballGroup = new Group();
 }
 
+//creates walls
 function createWalls() {
+    //Left wall
     wallLH = new Sprite(0, height/2, 8, height, 'k');
     wallLH.color = "black"
 
+    //Right wall
     wallRH = new Sprite(width, height/2, 8, height, 'k');
     wallRH.color = "black"
     
+    //Top wall
     wallTop = new Sprite(width/2, 0, width, 8, 'k');
     wallTop.color = "black"
 
+    //Bottom wall
     wallBottom = new Sprite(width/2, height, width, 8, 'k');
     wallBottom.color = "black"
 }
 
+//creates the ball
 function createNewBall(x, y, size = 50) {
     let ball = new Sprite(x, y, size, 'd');
 
@@ -43,8 +50,10 @@ function createNewBall(x, y, size = 50) {
     ballGroup.add(ball);
 }
 
+//ball merging
 function mergeBalls(ballA, ballB) {
 
+    //removes balls of the same size
     if (ballA.diameter === ballB.diameter) {
 
         let newSize = ballA.diameter + 20;
@@ -52,20 +61,21 @@ function mergeBalls(ballA, ballB) {
         let newX = (ballA.x + ballB.x) / 2;
         let newY = (ballA.y + ballB.y) / 2;
 
-        if (ballA.diameter === 50) score += 10;
-        if (ballA.diameter === 70) score += 20;
-        if (ballA.diameter === 90) score += 30;
-        if (ballA.diameter === 110) score += 40;
-        if (ballA.diameter === 130) score += 50;
-        if (ballA.diameter === 150) score += 60;
-        if (ballA.diameter === 170) score += 70;
-        if (ballA.diameter === 190) score += 80;
-        if (ballA.diameter === 210) score += 90;
+        //Adds score depending on the merge size
+        if (ballA.diameter === 50) score += 10; //mercury
+        if (ballA.diameter === 70) score += 20; //mars
+        if (ballA.diameter === 90) score += 30; //venus
+        if (ballA.diameter === 110) score += 40; //earth
+        if (ballA.diameter === 130) score += 50; //neptune
+        if (ballA.diameter === 150) score += 60; //uranus
+        if (ballA.diameter === 170) score += 70; //saturn
+        if (ballA.diameter === 190) score += 80; //jupiter
+        if (ballA.diameter === 210) score += 90; //sun
 
         ballA.remove();
         ballB.remove();
 
-        if (newSize > 170) {
+        if (newSize > 210) {
             return;
         }
 
@@ -89,42 +99,55 @@ function getBallColour(size) {
 
 function draw() {
     background('gray');
+
+    //Lose line
     stroke('red');
     line(0, loseLineY, width, loseLineY);
     noStroke();
+
+
     if (!gameOver) {
         ballGroup.collides(ballGroup, mergeBalls);
 
-	let ballAboveLine = false;
+	    let ballAboveLine = false;
 
-	for (let ball of ballGroup) {
-		if (ball.y - ball.diameter/2 < loseLineY) {
-			ballAboveLine = true;
-			break;
+	    for (let ball of ballGroup) {
+		    if (ball.y - ball.diameter/2 < loseLineY) {
+			    ballAboveLine = true;
+			    break;
             }
         }
 
-    if (ballAboveLine) {
+        //Starts timer if ball is above the line
+        if (ballAboveLine) {
 
-        if (dangerStartTime === null) {
-            dangerStartTime = millis();
-        }
+            if (dangerStartTime === null) {
+                dangerStartTime = millis();
+            }
+
+            //Ends the game when ball stays over the line for over 2 secs
+            if (millis() - dangerStartTime > dangerDuration) {
+                gameOver = true;
+            }
+
+        } 
         
-        if (millis() - dangerStartTime > dangerDuration) {
-            gameOver = true;
+        else{
+            dangerStartTime = null;
         }
 
-    } else{
-        dangerStartTime = null;
-    }
+    
+        //creating ball at mouse
+        if (mouse.presses() && mouseY < loseLineY) {
+            createNewBall(mouseX, mouseY)
 
-    
-    
-    if (mouse.presses() && mouseY < loseLineY) {
-        createNewBall(mouseX, mouseY)
+            randomSize = random(RANDOM_SIZE);
+            size = randomSize
+            
         }
     }
 
+    //gameOver=true
     if (gameOver) {
     fill('black');
 	textAlign(CENTER);
@@ -132,6 +155,8 @@ function draw() {
 	text("GAME OVER", width/2, height/2);
 	noLoop();
     }
+
+    //displays score
     fill('white');
     textSize(30);
     textAlign(LEFT, TOP);
