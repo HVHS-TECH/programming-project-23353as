@@ -9,7 +9,7 @@ const RANDOM_SIZE = [50, 70, 90];
 
 function setup() {
     console.log("setup");
-    cnv = createCanvas(windowWidth/4, windowHeight);
+    cnv = createCanvas(windowWidth, windowHeight);
     world.gravity.y = 10;
 
     createWalls();
@@ -20,32 +20,34 @@ function setup() {
 //creates walls
 function createWalls() {
     //Left wall
-    wallLH = new Sprite(0, height/2, 8, height, 'k');
+    wallLH = new Sprite((width/2) - (width/5), height/2, 8, height, 'k');
     wallLH.color = "black"
 
     //Right wall
-    wallRH = new Sprite(width, height/2, 8, height, 'k');
+    wallRH = new Sprite((width/2) + (width/5), height/2, 8, height, 'k');
     wallRH.color = "black"
     
     //Top wall
-    wallTop = new Sprite(width/2, 0, width, 8, 'k');
+    wallTop = new Sprite(width/2, 0, width/2.5, 8, 'k');
     wallTop.color = "black"
 
     //Bottom wall
-    wallBottom = new Sprite(width/2, height, width, 8, 'k');
+    wallBottom = new Sprite(width/2, height, width/2.5, 8, 'k');
     wallBottom.color = "black"
+
+    //Split wall
+    wallSplit = new Sprite(width - (width/2.8), height/2, 8, height, 'k');
+    wallSplit.color = "black"
 }
 
 //creates the ball
-function createNewBall(x, y, size = 50) {
+function createNewBall(x, y, size) {
     let ball = new Sprite(x, y, size, 'd');
 
     ball.color = getBallColour(size);
     ball.bounciness = 0;
     ball.friction = 5;
     ball.drag = 1;
-
-    ball.diameter = size;
 
     ballGroup.add(ball);
 }
@@ -102,7 +104,7 @@ function draw() {
 
     //Lose line
     stroke('red');
-    line(0, loseLineY, width, loseLineY);
+    line(width/3.35, loseLineY, width/1.56, loseLineY);
     noStroke();
 
 
@@ -139,26 +141,26 @@ function draw() {
     
         //creating ball at mouse
         if (mouse.presses() && mouseY < loseLineY) {
-            createNewBall(mouseX, mouseY)
 
             randomSize = random(RANDOM_SIZE);
-            size = randomSize
-            
+            console.log (randomSize)
+            createNewBall(mouseX, mouseY, randomSize);
         }
     }
 
     //gameOver=true
     if (gameOver) {
-    fill('black');
+    allSprites.draw();
+    fill('red');
 	textAlign(CENTER);
-	textSize(50);
+	textSize(60);
 	text("GAME OVER", width/2, height/2);
 	noLoop();
     }
 
     //displays score
     fill('white');
-    textSize(30);
-    textAlign(LEFT, TOP);
-    text("Score: " + score, 20, 20);
+    textSize(width/60);
+    text("Score: ", width/1.546, height/5);
+    text(score, width/1.546, height/4)
 }
