@@ -4,17 +4,25 @@ let gameOver = false;
 let dangerStartTime = null;
 let dangerDuration = 2000;
 let score = 0;
-let randomSize
+let lastClickTime;
+let clickCooldown = 700;
+
+let nextBallSize;
 const RANDOM_SIZE = [50, 70, 90];
 
 function setup() {
     console.log("setup");
+
     cnv = createCanvas(windowWidth, windowHeight);
     world.gravity.y = 10;
 
     createWalls();
 
     ballGroup = new Group();
+
+    nextBallSize = random(RANDOM_SIZE);
+
+    lastClickTime = 0;
 }
 
 //creates walls
@@ -36,7 +44,7 @@ function createWalls() {
     wallBottom.color = "black"
 
     //Split wall
-    wallSplit = new Sprite(width - (width/2.8), height/2, 8, height, 'k');
+    wallSplit = new Sprite(width - (width/2.6), height/2, 8, height, 'k');
     wallSplit.color = "black"
 }
 
@@ -45,7 +53,7 @@ function createNewBall(x, y, size) {
     let ball = new Sprite(x, y, size, 'd');
 
     ball.color = getBallColour(size);
-    ball.bounciness = 0;
+    ball.bounciness = 0.5;
     ball.friction = 5;
     ball.drag = 1;
 
@@ -104,7 +112,7 @@ function draw() {
 
     //Lose line
     stroke('red');
-    line(width/3.35, loseLineY, width/1.56, loseLineY);
+    line(width/3.35, loseLineY, width/1.63, loseLineY);
     noStroke();
 
 
@@ -140,11 +148,11 @@ function draw() {
 
     
         //creating ball at mouse
-        if (mouse.presses() && mouseY < loseLineY) {
+        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown) {
 
-            randomSize = random(RANDOM_SIZE);
-            console.log (randomSize)
-            createNewBall(mouseX, mouseY, randomSize);
+            createNewBall(mouseX, mouseY, nextBallSize);
+            lastClickTime = millis();
+            nextBallSize = random(RANDOM_SIZE);
         }
     }
 
@@ -158,9 +166,12 @@ function draw() {
 	noLoop();
     }
 
+    fill(getBallColour(nextBallSize));
+    circle(width/1.52, height/9, nextBallSize);
+
     //displays score
     fill('white');
     textSize(width/60);
-    text("Score: ", width/1.546, height/5);
-    text(score, width/1.546, height/4)
+    text("Score: ", width/1.615, height/5);
+    text(score, width/1.615, height/4)
 }
