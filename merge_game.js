@@ -10,6 +10,18 @@ let clickCooldown = 700;
 let nextBallSize;
 const RANDOM_SIZE = [50, 70, 90];
 
+function preload() {
+  mercury   = loadImage('../images/MERCURY.png');
+  venus = loadImage('../images/VENUS.png');
+  earth = loadImage('../images/EARTH.png');
+  mars = loadImage('../images/MARS.png');
+  jupiter = loadImage('../images/JUPITER.png');
+  saturn = loadImage('../images/SATURN.png');
+  uranus = loadImage('../images/URANUS.png');
+  neptune = loadImage('../images/NEPTUNE.png');
+  sun = loadImage('../images/SUN.png');
+}
+
 function setup() {
     console.log("setup");
 
@@ -52,7 +64,8 @@ function createWalls() {
 function createNewBall(x, y, size) {
     let ball = new Sprite(x, y, size, 'd');
 
-    ball.color = getBallColour(size);
+    ball.img = getBallImage(size);
+    ball.img.scale = size / ball.img.width
     ball.bounciness = 0.5;
     ball.friction = 5;
     ball.drag = 1;
@@ -93,16 +106,16 @@ function mergeBalls(ballA, ballB) {
     }
 }
 
-function getBallColour(size) {
-    if (size === 50) return '#b1adad'; //mercury
-    if (size === 70) return '#c1440e'; //mars
-    if (size === 90) return '#e3bb76 '; //venus
-    if (size === 110) return '#9fc164'; //earth
-    if (size === 130) return '#274687'; //neptune
-    if (size === 150) return '#c6d3e3'; //uranus
-    if (size === 170) return '#ead6b8'; //saturn
-    if (size === 190) return '#c99039'; //jupiter
-    if (size === 210) return '#ffff70'; //sun
+function getBallImage(size) {
+    if (size === 50) return mercury; //mercury
+    if (size === 70) return mars; //mars
+    if (size === 90) return venus; //venus
+    if (size === 110) return earth; //earth
+    if (size === 130) return neptune; //neptune
+    if (size === 150) return uranus; //uranus
+    if (size === 170) return saturn; //saturn
+    if (size === 190) return jupiter; //jupiter
+    if (size === 210) return sun; //sun
 
     return 'white';
 }
@@ -148,7 +161,7 @@ function draw() {
 
     
         //creating ball at mouse
-        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown) {
+        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX>(width/2) - (width/5) && mouseX<width - (width/2.6)) {
 
             createNewBall(mouseX, mouseY, nextBallSize);
             lastClickTime = millis();
@@ -166,8 +179,9 @@ function draw() {
 	noLoop();
     }
 
-    fill(getBallColour(nextBallSize));
-    circle(width/1.52, height/9, nextBallSize);
+    let previewIMG = getBallImage(nextBallSize);
+    imageMode(CENTER);
+    image(previewIMG, width/1.52, height/9, nextBallSize, nextBallSize)
 
     //displays score
     fill('white');
