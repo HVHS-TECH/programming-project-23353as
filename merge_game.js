@@ -11,15 +11,15 @@ let nextBallSize;
 const RANDOM_SIZE = [50, 70, 90];
 
 function preload() {
-  mercury   = loadImage('../images/MERCURY.png');
-  venus = loadImage('../images/VENUS.png');
-  earth = loadImage('../images/EARTH.png');
-  mars = loadImage('../images/MARS.png');
-  jupiter = loadImage('../images/JUPITER.png');
-  saturn = loadImage('../images/SATURN.png');
-  uranus = loadImage('../images/URANUS.png');
-  neptune = loadImage('../images/NEPTUNE.png');
-  sun = loadImage('../images/SUN.png');
+    mercury = loadImage('Images/MERCURY.png');
+    venus = loadImage('Images/VENUS.png');
+    earth = loadImage('Images/EARTH.png');
+    mars = loadImage('Images/MARS.png');
+    jupiter = loadImage('Images/JUPITER.png');
+    saturn = loadImage('Images/SATURN.png');
+    uranus = loadImage('Images/URANUS.png');
+    neptune = loadImage('Images/NEPTUNE.png');
+    sun = loadImage('Images/SUN.png');
 }
 
 function setup() {
@@ -40,23 +40,23 @@ function setup() {
 //creates walls
 function createWalls() {
     //Left wall
-    wallLH = new Sprite((width/2) - (width/5), height/2, 8, height, 'k');
+    wallLH = new Sprite((width / 2) - (width / 5), height / 2, 8, height, 'k');
     wallLH.color = "black"
 
     //Right wall
-    wallRH = new Sprite((width/2) + (width/5), height/2, 8, height, 'k');
+    wallRH = new Sprite((width / 2) + (width / 5), height / 2, 8, height, 'k');
     wallRH.color = "black"
-    
+
     //Top wall
-    wallTop = new Sprite(width/2, 0, width/2.5, 8, 'k');
+    wallTop = new Sprite(width / 2, 0, width / 2.5, 8, 'k');
     wallTop.color = "black"
 
     //Bottom wall
-    wallBottom = new Sprite(width/2, height, width/2.5, 8, 'k');
+    wallBottom = new Sprite(width / 2, height, width / 2.5, 8, 'k');
     wallBottom.color = "black"
 
     //Split wall
-    wallSplit = new Sprite(width - (width/2.6), height/2, 8, height, 'k');
+    wallSplit = new Sprite(width - (width / 2.6), height / 2, 8, height, 'k');
     wallSplit.color = "black"
 }
 
@@ -69,6 +69,10 @@ function createNewBall(x, y, size) {
     ball.bounciness = 0.5;
     ball.friction = 5;
     ball.drag = 1;
+
+    if (size == 170) {
+        saturn.resize(1000, 1000);
+    }
 
     ballGroup.add(ball);
 }
@@ -102,7 +106,7 @@ function mergeBalls(ballA, ballB) {
             return;
         }
 
-        createNewBall (newX, newY, newSize);
+        createNewBall(newX, newY, newSize);
     }
 }
 
@@ -117,6 +121,8 @@ function getBallImage(size) {
     if (size === 190) return jupiter; //jupiter
     if (size === 210) return sun; //sun
 
+
+
     return 'white';
 }
 
@@ -125,19 +131,19 @@ function draw() {
 
     //Lose line
     stroke('red');
-    line(width/3.35, loseLineY, width/1.63, loseLineY);
+    line(width / 3.35, loseLineY, width / 1.63, loseLineY);
     noStroke();
 
 
     if (!gameOver) {
         ballGroup.collides(ballGroup, mergeBalls);
 
-	    let ballAboveLine = false;
+        let ballAboveLine = false;
 
-	    for (let ball of ballGroup) {
-		    if (ball.y - ball.diameter/2 < loseLineY) {
-			    ballAboveLine = true;
-			    break;
+        for (let ball of ballGroup) {
+            if (ball.y - ball.diameter / 2 < loseLineY) {
+                ballAboveLine = true;
+                break;
             }
         }
 
@@ -153,15 +159,15 @@ function draw() {
                 gameOver = true;
             }
 
-        } 
-        
-        else{
+        }
+
+        else {
             dangerStartTime = null;
         }
 
-    
+
         //creating ball at mouse
-        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX>(width/2) - (width/5) && mouseX<width - (width/2.6)) {
+        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) && mouseX < width - (width / 2.6)) {
 
             createNewBall(mouseX, mouseY, nextBallSize);
             lastClickTime = millis();
@@ -171,21 +177,21 @@ function draw() {
 
     //gameOver=true
     if (gameOver) {
-    allSprites.draw();
-    fill('red');
-	textAlign(CENTER);
-	textSize(60);
-	text("GAME OVER", width/2, height/2);
-	noLoop();
+        allSprites.draw();
+        fill('red');
+        textAlign(CENTER);
+        textSize(60);
+        text("GAME OVER", width / 2, height / 2);
+        noLoop();
     }
 
     let previewIMG = getBallImage(nextBallSize);
     imageMode(CENTER);
-    image(previewIMG, width/1.52, height/9, nextBallSize, nextBallSize)
+    image(previewIMG, width / 1.52, height / 9, nextBallSize, nextBallSize)
 
     //displays score
     fill('white');
-    textSize(width/60);
-    text("Score: ", width/1.615, height/5);
-    text(score, width/1.615, height/4)
+    textSize(width / 60);
+    text("Score: ", width / 1.615, height / 5);
+    text(score, width / 1.615, height / 4)
 }
