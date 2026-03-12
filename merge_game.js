@@ -20,12 +20,13 @@ function preload() {
     uranus = loadImage('Images/URANUS.png');
     neptune = loadImage('Images/NEPTUNE.png');
     sun = loadImage('Images/SUN.png');
+    BGimg = loadImage('Images/SPACE.jpg');
 }
 
 function setup() {
     console.log("setup");
 
-    cnv = createCanvas(windowWidth, windowHeight);
+    cnv = createCanvas(windowWidth-3, windowHeight-3);
     world.gravity.y = 10;
 
     createWalls();
@@ -62,17 +63,25 @@ function createWalls() {
 
 //creates the ball
 function createNewBall(x, y, size) {
-    let ball = new Sprite(x, y, size, 'd');
+    let ball = new Sprite(x, y, size, 'dynamic');
 
     ball.img = getBallImage(size);
     ball.img.scale = size / ball.img.width
+    ball.colider = 'circle';
+
+    if (size === 170) {
+        ball.img.scale = (size * 1.7) / ball.image.width;
+    } else if (size === 210) {
+        ball.img.scale = (size * 1.5) / ball.image.width;
+    } else {
+        ball.img.scale = size / ball.img.width
+    }
+
     ball.bounciness = 0.5;
     ball.friction = 5;
     ball.drag = 1;
 
-    if (size == 170) {
-        saturn.resize(1000, 1000);
-    }
+
 
     ballGroup.add(ball);
 }
