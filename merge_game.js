@@ -65,6 +65,8 @@ function createWalls() {
 function createNewBall(x, y, size) {
     let ball = new Sprite(x, y, size, 'dynamic');
 
+    ball.debug = true;
+
     ball.img = getBallImage(size);
     ball.img.scale = size / ball.img.width
     ball.colider = 'circle';
@@ -193,6 +195,11 @@ function draw() {
         text("GAME OVER", width / 2, height / 2);
         noLoop();
     }
+
+if (kb.presses('space')) {
+    createNewBall(mouseX, mouseY, 170);
+}
+
 
     let previewIMG = getBallImage(nextBallSize);
     imageMode(CENTER);
