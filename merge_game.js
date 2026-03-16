@@ -8,7 +8,8 @@ let lastClickTime;
 let clickCooldown = 700;
 
 let nextBallSize;
-const RANDOM_SIZE = [50, 70, 90];
+let RANDOM_SIZE;
+let sizeFactor = 18.22;
 
 function preload() {
     mercury = loadImage('Images/MERCURY.png');
@@ -25,9 +26,12 @@ function preload() {
 
 function setup() {
     console.log("setup");
-
+    console.log(windowWidth)
+    console.log(windowHeight)
     cnv = createCanvas(windowWidth-3, windowHeight-3);
     world.gravity.y = 10;
+    ballOneSize = windowHeight/sizeFactor
+    RANDOM_SIZE = [ballOneSize, ballOneSize*1.5, ballOneSize*1.5**2]
 
     createWalls();
 
@@ -69,7 +73,7 @@ function createNewBall(x, y, size) {
 
     ball.img = getBallImage(size);
     ball.img.scale = size / ball.img.width
-    ball.colider = 'circle';
+    ball.collider = 'circle';
 
     if (size === 170) {
         ball.img.scale = (size * 1.7) / ball.image.width;
@@ -94,26 +98,26 @@ function mergeBalls(ballA, ballB) {
     //removes balls of the same size
     if (ballA.diameter === ballB.diameter) {
 
-        let newSize = ballA.diameter + 20;
+        let newSize = ballA.diameter * 1.5;
 
         let newX = (ballA.x + ballB.x) / 2;
         let newY = (ballA.y + ballB.y) / 2;
 
         //Adds score depending on the merge size
-        if (ballA.diameter === 50) score += 10; //mercury
-        if (ballA.diameter === 70) score += 20; //mars
-        if (ballA.diameter === 90) score += 30; //venus
-        if (ballA.diameter === 110) score += 40; //earth
-        if (ballA.diameter === 130) score += 50; //neptune
-        if (ballA.diameter === 150) score += 60; //uranus
-        if (ballA.diameter === 170) score += 70; //saturn
-        if (ballA.diameter === 190) score += 80; //jupiter
-        if (ballA.diameter === 210) score += 90; //sun
+        if (ballA.diameter === ballOneSize) score += 10; //mercury
+        if (ballA.diameter === ballOneSize*1.5) score += 20; //mars
+        if (ballA.diameter === ballOneSize*1.5**2) score += 30; //venus
+        if (ballA.diameter === ballOneSize*1.5**3) score += 40; //earth
+        if (ballA.diameter === ballOneSize*1.5**4) score += 50; //neptune
+        if (ballA.diameter === ballOneSize*1.5**5) score += 60; //uranus
+        if (ballA.diameter === ballOneSize*1.5**6) score += 70; //saturn
+        if (ballA.diameter === ballOneSize*1.5**7) score += 80; //jupiter
+        if (ballA.diameter === ballOneSize*1.5**8) score += 90; //sun
 
         ballA.remove();
         ballB.remove();
 
-        if (newSize > 210) {
+        if (newSize > ballOneSize*1.5**8) {
             return;
         }
 
