@@ -1,15 +1,13 @@
 let ballGroup;
 let loseLineY = 120;
-let gameOver = false;
 let dangerStartTime = null;
 let dangerDuration = 2000;
 let score = 0;
 let lastClickTime;
 let clickCooldown = 700;
-
+let gameState;
 let nextBallSize;
-let RANDOM_SIZE;
-let sizeFactor = 18.22;
+const RANDOM_SIZE = [50, 70, 90];
 
 function preload() {
     mercury = loadImage('Images/MERCURY.png');
@@ -26,14 +24,11 @@ function preload() {
 
 function setup() {
     console.log("setup");
-    console.log(windowWidth)
-    console.log(windowHeight)
-    cnv = createCanvas(windowWidth-3, windowHeight-3);
-    world.gravity.y = 10;
-    ballOneSize = windowHeight/sizeFactor
-    RANDOM_SIZE = [ballOneSize, ballOneSize*1.5, ballOneSize*1.5**2]
 
-    createWalls();
+    cnv = createCanvas(windowWidth - 3, windowHeight - 3);
+    world.gravity.y = 10;
+
+    gameState = "start";
 
     ballGroup = new Group();
 
@@ -69,11 +64,9 @@ function createWalls() {
 function createNewBall(x, y, size) {
     let ball = new Sprite(x, y, size, 'dynamic');
 
-    ball.debug = true;
-
     ball.img = getBallImage(size);
     ball.img.scale = size / ball.img.width
-    ball.collider = 'circle';
+    ball.colider = 'circle';
 
     if (size === 170) {
         ball.img.scale = (size * 1.7) / ball.image.width;
@@ -98,26 +91,26 @@ function mergeBalls(ballA, ballB) {
     //removes balls of the same size
     if (ballA.diameter === ballB.diameter) {
 
-        let newSize = ballA.diameter * 1.5;
+        let newSize = ballA.diameter + 20;
 
         let newX = (ballA.x + ballB.x) / 2;
         let newY = (ballA.y + ballB.y) / 2;
 
         //Adds score depending on the merge size
-        if (ballA.diameter === ballOneSize) score += 10; //mercury
-        if (ballA.diameter === ballOneSize*1.5) score += 20; //mars
-        if (ballA.diameter === ballOneSize*1.5**2) score += 30; //venus
-        if (ballA.diameter === ballOneSize*1.5**3) score += 40; //earth
-        if (ballA.diameter === ballOneSize*1.5**4) score += 50; //neptune
-        if (ballA.diameter === ballOneSize*1.5**5) score += 60; //uranus
-        if (ballA.diameter === ballOneSize*1.5**6) score += 70; //saturn
-        if (ballA.diameter === ballOneSize*1.5**7) score += 80; //jupiter
-        if (ballA.diameter === ballOneSize*1.5**8) score += 90; //sun
+        if (ballA.diameter === 50) score += 10; //mercury
+        if (ballA.diameter === 70) score += 20; //mars
+        if (ballA.diameter === 90) score += 30; //venus
+        if (ballA.diameter === 110) score += 40; //earth
+        if (ballA.diameter === 130) score += 50; //neptune
+        if (ballA.diameter === 150) score += 60; //uranus
+        if (ballA.diameter === 170) score += 70; //saturn
+        if (ballA.diameter === 190) score += 80; //jupiter
+        if (ballA.diameter === 210) score += 90; //sun
 
         ballA.remove();
         ballB.remove();
 
-        if (newSize > ballOneSize*1.5**8) {
+        if (newSize > 210) {
             return;
         }
 
@@ -142,15 +135,27 @@ function getBallImage(size) {
 }
 
 function draw() {
-    background('gray');
+    background('#add8e6');
 
-    //Lose line
-    stroke('red');
-    line(width / 3.35, loseLineY, width / 1.63, loseLineY);
-    noStroke();
+    if (gameState == "start") {
 
+    fill(0);
+    textAlign(CENTER);
+    textSize(40);
+    text("Click to Start", width / 2, height / 2);
 
-    if (!gameOver) {
+    if (mouse.presses()) {
+        gameState = "game";
+    }
+    }
+
+    if (gameState == "game") {
+        stroke('red');
+        line(width / 3.35, loseLineY, width / 1.63, loseLineY);
+        noStroke();
+
+        createWalls();
+
         ballGroup.collides(ballGroup, mergeBalls);
 
         let ballAboveLine = false;
@@ -171,7 +176,8 @@ function draw() {
 
             //Ends the game when ball stays over the line for over 2 secs
             if (millis() - dangerStartTime > dangerDuration) {
-                gameOver = true;
+                gameState = "end";
+                
             }
 
         }
@@ -188,10 +194,22 @@ function draw() {
             lastClickTime = millis();
             nextBallSize = random(RANDOM_SIZE);
         }
+
+        //preview ball
+        let previewIMG = getBallImage(nextBallSize);
+        imageMode(CENTER);
+        image(previewIMG, width / 1.52, height / 9, nextBallSize, nextBallSize)
+
+        //score
+        fill('white');
+        textSize(width / 60);
+        text("Score: ", width / 1.53, height / 5);
+        text(score, width / 1.49, height / 4)
     }
 
-    //gameOver=true
-    if (gameOver) {
+    if (gameState == "end") {
+
+        background('#add8e6');
         allSprites.draw();
         fill('red');
         textAlign(CENTER);
@@ -199,19 +217,4 @@ function draw() {
         text("GAME OVER", width / 2, height / 2);
         noLoop();
     }
-
-if (kb.presses('space')) {
-    createNewBall(mouseX, mouseY, 170);
-}
-
-
-    let previewIMG = getBallImage(nextBallSize);
-    imageMode(CENTER);
-    image(previewIMG, width / 1.52, height / 9, nextBallSize, nextBallSize)
-
-    //displays score
-    fill('white');
-    textSize(width / 60);
-    text("Score: ", width / 1.615, height / 5);
-    text(score, width / 1.615, height / 4)
 }
