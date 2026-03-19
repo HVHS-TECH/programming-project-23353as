@@ -26,7 +26,7 @@ function setup() {
     console.log("setup");
 
     cnv = createCanvas(windowWidth - 3, windowHeight - 3);
-    world.gravity.y = 10;
+    world.gravity.y = 13;
 
     gameState = "start";
 
