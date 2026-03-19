@@ -146,6 +146,7 @@ function draw() {
 
     if (mouse.presses()) {
         gameState = "game";
+        createWalls();
     }
     }
 
@@ -153,8 +154,6 @@ function draw() {
         stroke('red');
         line(width / 3.35, loseLineY, width / 1.63, loseLineY);
         noStroke();
-
-        createWalls();
 
         ballGroup.collides(ballGroup, mergeBalls);
 
