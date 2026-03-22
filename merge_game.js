@@ -8,6 +8,7 @@ let clickCooldown = 700;
 let gameState;
 let nextBallSize;
 const RANDOM_SIZE = [50, 70, 90];
+const RANDOM_ALTER = [-1, 1];
 
 function preload() {
     mercury = loadImage('Images/MERCURY.png');
@@ -189,7 +190,8 @@ function draw() {
         //creating ball at mouse
         if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) && mouseX < width - (width / 2.6)) {
 
-            createNewBall(mouseX, mouseY, nextBallSize);
+            alterBallX = random(RANDOM_ALTER);
+            createNewBall(mouseX-alterBallX, mouseY, nextBallSize);
             lastClickTime = millis();
             nextBallSize = random(RANDOM_SIZE);
         }
