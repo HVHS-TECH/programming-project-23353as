@@ -7,10 +7,12 @@ let lastClickTime;
 let clickCooldown = 700;
 let gameState;
 let nextBallSize;
+
 const RANDOM_SIZE = [50, 70, 90];
-const RANDOM_ALTER = [-1, 1];
 
 function preload() {
+    start = loadImage('Images/START.png')
+    controls = loadImage('Images/CONTROLS.png')
     mercury = loadImage('Images/MERCURY.png');
     venus = loadImage('Images/VENUS.png');
     earth = loadImage('Images/EARTH.png');
@@ -20,13 +22,15 @@ function preload() {
     uranus = loadImage('Images/URANUS.png');
     neptune = loadImage('Images/NEPTUNE.png');
     sun = loadImage('Images/SUN.png');
-    BGimg = loadImage('Images/SPACE.jpg');
+    BGimg = loadImage('Images/SPACE.png');
 }
 
 function setup() {
     console.log("setup");
 
-    cnv = createCanvas(windowWidth - 3, windowHeight - 3);
+    cnv = createCanvas(windowWidth, windowHeight);
+    cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
+
     world.gravity.y = 13;
 
     gameState = "start";
@@ -42,23 +46,23 @@ function setup() {
 function createWalls() {
     //Left wall
     wallLH = new Sprite((width / 2) - (width / 5), height / 2, 8, height, 'k');
-    wallLH.color = "black"
+    wallLH.color = "#FFD700"
 
     //Right wall
     wallRH = new Sprite((width / 2) + (width / 5), height / 2, 8, height, 'k');
-    wallRH.color = "black"
+    wallRH.color = "#FFD700"
 
     //Top wall
     wallTop = new Sprite(width / 2, 0, width / 2.5, 8, 'k');
-    wallTop.color = "black"
+    wallTop.color = "#FFD700"
 
     //Bottom wall
     wallBottom = new Sprite(width / 2, height, width / 2.5, 8, 'k');
-    wallBottom.color = "black"
+    wallBottom.color = "#FFD700"
 
     //Split wall
     wallSplit = new Sprite(width - (width / 2.6), height / 2, 8, height, 'k');
-    wallSplit.color = "black"
+    wallSplit.color = "#FFD700"
 }
 
 //creates the ball
@@ -136,19 +140,21 @@ function getBallImage(size) {
 }
 
 function draw() {
-    background('#add8e6');
 
+    clear();
+
+    imageMode(CORNER);
+    image(BGimg, 0, 0, width, height);
     if (gameState == "start") {
 
-    fill(0);
-    textAlign(CENTER);
-    textSize(40);
-    text("Click to Start", width / 2, height / 2);
+        imageMode(CENTER);
+        image(start, width/2, height/1.8, width/5, height/8);
+        image(controls, width/2, height/1.4, width/5, height/8);
 
-    if (mouse.presses()) {
-        gameState = "game";
-        createWalls();
-    }
+        if (mouse.presses()) {
+            gameState = "game";
+            createWalls();
+        }
     }
 
     if (gameState == "game") {
@@ -177,7 +183,7 @@ function draw() {
             //Ends the game when ball stays over the line for over 2 secs
             if (millis() - dangerStartTime > dangerDuration) {
                 gameState = "end";
-                
+
             }
 
         }
@@ -190,8 +196,9 @@ function draw() {
         //creating ball at mouse
         if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) && mouseX < width - (width / 2.6)) {
 
-            alterBallX = random(RANDOM_ALTER);
-            createNewBall(mouseX-alterBallX, mouseY, nextBallSize);
+            alterBallX = random(-1, 1);
+            console.log(alterBallX);
+            createNewBall(mouseX + alterBallX, mouseY, nextBallSize);
             lastClickTime = millis();
             nextBallSize = random(RANDOM_SIZE);
         }
@@ -211,7 +218,7 @@ function draw() {
     if (gameState == "end") {
 
         background('#add8e6');
-        allSprites.draw();
+        allSprites.deleteAll();
         fill('red');
         textAlign(CENTER);
         textSize(60);
