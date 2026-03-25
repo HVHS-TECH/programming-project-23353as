@@ -11,7 +11,8 @@ let nextBallSize;
 const RANDOM_SIZE = [50, 70, 90];
 
 function preload() {
-    start = loadImage('Images/START.png')
+    title = loadImage('Images/TITLE.png');
+    start = loadImage('Images/START.png');
     controls = loadImage('Images/CONTROLS.png')
     mercury = loadImage('Images/MERCURY.png');
     venus = loadImage('Images/VENUS.png');
@@ -31,6 +32,18 @@ function setup() {
     cnv = createCanvas(windowWidth, windowHeight);
     cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
 
+    startButton = new Sprite(width / 2, height / 1.9, width / 1.65, height / 2.8, 'static');
+    startButton.img = start;
+    startButton.scale = 0.3;
+
+    controlButton = new Sprite(width / 2, height / 1.4, width / 1.5, height / 2.8, 'static');
+    controlButton.img = controls;
+    controlButton.scale = 0.3;
+
+    titleText = new Sprite(width / 2, height / 4, width / 1.5, height / 2.8, 'static');
+    titleText.img = title;
+    titleText.scale = 0.7;
+
     world.gravity.y = 13;
 
     gameState = "start";
@@ -40,6 +53,8 @@ function setup() {
     nextBallSize = random(RANDOM_SIZE);
 
     lastClickTime = 0;
+
+    //titleText.debug = true;
 }
 
 //creates walls
@@ -112,6 +127,7 @@ function mergeBalls(ballA, ballB) {
         if (ballA.diameter === 190) score += 80; //jupiter
         if (ballA.diameter === 210) score += 90; //sun
 
+        //removes previous balls
         ballA.remove();
         ballB.remove();
 
@@ -147,16 +163,31 @@ function draw() {
     image(BGimg, 0, 0, width, height);
     if (gameState == "start") {
 
-        imageMode(CENTER);
-        image(start, width/2, height/1.8, width/5, height/8);
-        image(controls, width/2, height/1.4, width/5, height/8);
-
-        if (mouse.presses()) {
+        if (startButton.mouse.presses()) {
             gameState = "game";
             createWalls();
+            startButton.remove();
+            controlButton.remove();
+            titleText.remove();
+        }
+        if (controlButton.mouse.presses()) {
+            gameState = "controls";
+            startButton.remove();
+            controlButton.remove();
+            titleText.remove();
+            controlBox = new Sprite(width / 2, height / 2, width / 3, width / 3, 'static');
+            controlBox.color = "#a688ff"
         }
     }
+    if (gameState == "controls") {
+    fill('white');
+    textAlign(CENTER);
+    textSize(40);
+    text("Controls", width / 2, height / 2 - 50);
 
+    textSize(20);
+    text("Click to drop planets\nMerge same sizes\Don't let them cross the line!", width / 2, height / 2 + 20);
+}
     if (gameState == "game") {
         stroke('red');
         line(width / 3.35, loseLineY, width / 1.63, loseLineY);
