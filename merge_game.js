@@ -10,10 +10,20 @@ let nextBallSize;
 
 const RANDOM_SIZE = [50, 70, 90];
 
+//Preloads images
 function preload() {
     title = loadImage('Images/TITLE.png');
     start = loadImage('Images/START.png');
-    controls = loadImage('Images/CONTROLS.png')
+    controls = loadImage('Images/CONTROLS.png');
+    gameOver = loadImage('Images/GAME OVER.png');
+
+    back = loadImage('Images/BACK.png');
+    home = loadImage('Images/HOME.png');
+    pause = loadImage('Images/PAUSE.png');
+    restart = loadImage('Images/RESTART.png');
+    resume = loadImage('Images/RESUME.png');
+    settings = loadImage('Images/SETTINGS.png');
+
     mercury = loadImage('Images/MERCURY.png');
     venus = loadImage('Images/VENUS.png');
     earth = loadImage('Images/EARTH.png');
@@ -23,26 +33,29 @@ function preload() {
     uranus = loadImage('Images/URANUS.png');
     neptune = loadImage('Images/NEPTUNE.png');
     sun = loadImage('Images/SUN.png');
+
     BGimg = loadImage('Images/SPACE.png');
 }
 
 function setup() {
     console.log("setup");
 
+    //Creates canvas
     cnv = createCanvas(windowWidth, windowHeight);
     cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
 
-    startButton = new Sprite(width / 2, height / 1.9, width / 1.65, height / 2.8, 'static');
+    //
+    startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
     startButton.img = start;
     startButton.scale = 0.3;
 
-    controlButton = new Sprite(width / 2, height / 1.4, width / 1.5, height / 2.8, 'static');
+    controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
     controlButton.img = controls;
     controlButton.scale = 0.3;
 
-    titleText = new Sprite(width / 2, height / 4, width / 1.5, height / 2.8, 'static');
+    titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
     titleText.img = title;
-    titleText.scale = 0.7;
+    titleText.scale = 0.4;
 
     world.gravity.y = 13;
 
@@ -180,14 +193,29 @@ function draw() {
         }
     }
     if (gameState == "controls") {
-    fill('white');
-    textAlign(CENTER);
-    textSize(40);
-    text("Controls", width / 2, height / 2 - 50);
 
-    textSize(20);
-    text("Click to drop planets\nMerge same sizes\Don't let them cross the line!", width / 2, height / 2 + 20);
-}
+        allSprites.draw();
+
+        textAlign(CENTER, CENTER);
+
+        drawingContext.shadowBlur = 15;
+        drawingContext.shadowColour = "#ffffff";
+
+        fill("#000000")
+        textSize(80);
+        text("Controls", controlBox.x, controlBox.y - controlBox.h / 3);
+
+        textSize(40);
+
+        let controlsText =
+            "•Click above the red line to drop planets\n\n" +
+            "•Merge same sizes\n\n" +
+            "•Don’t let them cross the line!";
+
+        text(controlsText, controlBox.x / 1.42, controlBox.y / 2, controlBox.w - 40, controlBox.h - 40);
+
+    }
+
     if (gameState == "game") {
         stroke('red');
         line(width / 3.35, loseLineY, width / 1.63, loseLineY);
@@ -214,6 +242,10 @@ function draw() {
             //Ends the game when ball stays over the line for over 2 secs
             if (millis() - dangerStartTime > dangerDuration) {
                 gameState = "end";
+                allSprites.deleteAll();
+                gameOverText = new Sprite(width/2, height /2, width / 1.5, height / 5, 'static');
+                gameOverText.img = gameOver;
+                gameOverText.scale = 0.4;
 
             }
 
@@ -247,13 +279,5 @@ function draw() {
     }
 
     if (gameState == "end") {
-
-        background('#add8e6');
-        allSprites.deleteAll();
-        fill('red');
-        textAlign(CENTER);
-        textSize(60);
-        text("GAME OVER", width / 2, height / 2);
-        noLoop();
     }
 }
