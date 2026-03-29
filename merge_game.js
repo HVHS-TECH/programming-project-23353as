@@ -44,10 +44,6 @@ function setup() {
     cnv = createCanvas(windowWidth, windowHeight);
     cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
 
-<<<<<<< HEAD
-    //
-=======
->>>>>>> 02559cfaba92076492d8ad4b52ba8227121283fd
     startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
     startButton.img = start;
     startButton.scale = 0.3;
@@ -60,7 +56,7 @@ function setup() {
     titleText.img = title;
     titleText.scale = 0.4;
 
-    world.gravity.y = 13;
+    //world.gravity.y = 13;
 
     gameState = "start";
 
@@ -79,23 +75,28 @@ function setup() {
 function createWalls() {
     //Left wall
     wallLH = new Sprite((width / 2) - (width / 5), height / 2, 8, height, 'k');
-    wallLH.color = "#FFD700"
+    wallLH.color = "#cd86db"
+    wallLH.opacity = 0.5;
 
     //Right wall
     wallRH = new Sprite((width / 2) + (width / 5), height / 2, 8, height, 'k');
-    wallRH.color = "#FFD700"
+    wallRH.color = "#cd86db"
+    wallRH.opacity = 0.5;
 
     //Top wall
     wallTop = new Sprite(width / 2, 0, width / 2.5, 8, 'k');
-    wallTop.color = "#FFD700"
+    wallTop.color = "#cd86db"
+    wallTop.opacity = 0.5;
 
     //Bottom wall
     wallBottom = new Sprite(width / 2, height, width / 2.5, 8, 'k');
-    wallBottom.color = "#FFD700"
+    wallBottom.color = "#cd86db"
+    wallBottom.opacity = 0.5;
 
     //Split wall
     wallSplit = new Sprite(width - (width / 2.6), height / 2, 8, height, 'k');
-    wallSplit.color = "#FFD700"
+    wallSplit.color = "#cd86db"
+    wallSplit.opacity = 0.5;
 }
 
 //creates the ball
@@ -187,6 +188,12 @@ function draw() {
             startButton.remove();
             controlButton.remove();
             titleText.remove();
+            homeButton = new Sprite(width / 1.52, height / 1.35, width / 2.24, height / 2.5, 'static');
+            homeButton.img = home;
+            homeButton.scale = 0.2;
+            settingsButton = new Sprite(width / 1.52, height / 1.18, width / 2.24, height / 2.5, 'static');
+            settingsButton.img = settings;
+            settingsButton.scale = 0.25;
         }
         if (controlButton.mouse.presses()) {
             gameState = "controls";
@@ -215,14 +222,35 @@ function draw() {
         let controlsText =
             "•Click above the red line to drop planets\n\n" +
             "•Merge same sizes\n\n" +
-            "•Don’t let them cross the line!";
+            "•Don't let them cross the line!";
 
         text(controlsText, controlBox.x / 1.42, controlBox.y / 2, controlBox.w - 40, controlBox.h - 40);
+
+            backButton = new Sprite(width / 2.67, height / 4.5, width / 2.24, height / 2.5, 'static');
+            backButton.img = back;
+            backButton.scale = 0.3;
+
+         if (backButton.mouse.presses()) {
+            gameState = "start";
+            allSprites.deleteAll();
+
+            startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
+            startButton.img = start;
+            startButton.scale = 0.3;
+
+            controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
+            controlButton.img = controls;
+            controlButton.scale = 0.3;
+
+            titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
+            titleText.img = title;
+            titleText.scale = 0.4;
+        }
 
     }
 
     if (gameState == "game") {
-        stroke('red');
+        stroke(255, 0, 0, 200);
         line(width / 3.35, loseLineY, width / 1.63, loseLineY);
         noStroke();
 
@@ -248,9 +276,18 @@ function draw() {
             if (millis() - dangerStartTime > dangerDuration) {
                 gameState = "end";
                 allSprites.deleteAll();
-                gameOverText = new Sprite(width/2, height /2, width / 1.5, height / 5, 'static');
+
+                gameOverText = new Sprite(width / 2, height / 3, width / 1.5, height / 5, 'static');
                 gameOverText.img = gameOver;
                 gameOverText.scale = 0.4;
+
+                homeButton = new Sprite(width / 2.2, height / 1.35, width / 2.24, height / 2.5, 'static');
+                homeButton.img = home;
+                homeButton.scale = 0.2;
+
+                restartButton = new Sprite(width / 1.9, height / 1.35, width / 2.24, height / 2.5, 'static');
+                restartButton.img = restart;
+                restartButton.scale = 0.2;
 
             }
 
@@ -274,15 +311,40 @@ function draw() {
         //preview ball
         let previewIMG = getBallImage(nextBallSize);
         imageMode(CENTER);
-        image(previewIMG, width / 1.52, height / 9, nextBallSize, nextBallSize)
+        image(previewIMG, width / 1.52, height / 7, nextBallSize, nextBallSize)
 
         //score
         fill('white');
         textSize(width / 60);
-        text("Score: ", width / 1.6, height / 4.5);
-        text(score, width / 1.49, height / 3.5)
+        text("Next:", width / 1.57, height / 13);
+        text("Score: ", width / 1.6, height / 3.6);
+        text(score, width / 1.49, height / 2.9)
+
+
     }
 
     if (gameState == "end") {
+        fill('white');
+        textSize(width / 30);
+
+        text("Score: ", width / 2.5, height / 1.5);
+        text(score, width / 2, height / 1.5);
+
+        if (homeButton.mouse.presses()) {
+            gameState = "start";
+            allSprites.deleteAll();
+
+            startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
+            startButton.img = start;
+            startButton.scale = 0.3;
+
+            controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
+            controlButton.img = controls;
+            controlButton.scale = 0.3;
+
+            titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
+            titleText.img = title;
+            titleText.scale = 0.4;
+        }
     }
 }
