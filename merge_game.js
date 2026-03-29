@@ -44,7 +44,10 @@ function setup() {
     cnv = createCanvas(windowWidth, windowHeight);
     cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
 
+<<<<<<< HEAD
     //
+=======
+>>>>>>> 02559cfaba92076492d8ad4b52ba8227121283fd
     startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
     startButton.img = start;
     startButton.scale = 0.3;
@@ -68,6 +71,8 @@ function setup() {
     lastClickTime = 0;
 
     //titleText.debug = true;
+    //controlButton.debug = true;
+    //startButton.debug = true;
 }
 
 //creates walls
@@ -274,8 +279,8 @@ function draw() {
         //score
         fill('white');
         textSize(width / 60);
-        text("Score: ", width / 1.53, height / 5);
-        text(score, width / 1.49, height / 4)
+        text("Score: ", width / 1.6, height / 4.5);
+        text(score, width / 1.49, height / 3.5)
     }
 
     if (gameState == "end") {
