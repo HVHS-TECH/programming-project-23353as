@@ -44,16 +44,20 @@ function setup() {
     cnv = createCanvas(windowWidth, windowHeight);
     cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
 
+    //Runs funtion for Start button
     startRun();
 
+    //Control Button
     controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
     controlButton.img = controls;
     controlButton.scale = 0.3;
 
+    //Runs the Title Text
     titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
     titleText.img = title;
     titleText.scale = 0.3;
 
+    //Gravity
     world.gravity.y = 12;
 
     gameState = "start";
@@ -169,11 +173,8 @@ function getBallImage(size) {
     if (size === 190) return jupiter; //jupiter
     if (size === 210) return sun; //sun
 
-
-
     return 'white';
 }
-
 
 
 
@@ -228,6 +229,7 @@ function draw() {
             restartButton.img = restart;
             restartButton.scale = 0.2;
         }
+
         if (controlButton.mouse.presses()) {
             gameState = "controls";
 
@@ -241,6 +243,8 @@ function draw() {
             backButton.scale = 0.3;
         }
     }
+
+
     if (gameState == "controls") {
 
         allSprites.draw();
@@ -275,8 +279,10 @@ function draw() {
         }
 
     }
+    
 
     if (gameState == "game") {
+        //Draws the loose line
         stroke(255, 0, 0, 200);
         line(width / 3.35, loseLineY, width / 1.63, loseLineY);
         noStroke();
@@ -325,7 +331,7 @@ function draw() {
         }
 
 
-        //creating ball at mouse
+        //Creates ball at mouse
         if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) && mouseX < width - (width / 2.6)) {
 
             alterBallX = random(-1, 1);
@@ -335,18 +341,19 @@ function draw() {
             nextBallSize = random(RANDOM_SIZE);
         }
 
-        //preview ball
+        //Preview ball
         let previewIMG = getBallImage(nextBallSize);
         imageMode(CENTER);
         image(previewIMG, width / 1.52, height / 7, nextBallSize, nextBallSize)
 
-        //score
+        //Score
         fill('white');
         textSize(width / 60);
         text("Next:", width / 1.57, height / 13);
         text("Score: ", width / 1.6, height / 3.6);
         text(score, width / 1.57, height / 2.9)
 
+        //Takes player to Start screen
         if (homeButton.mouse.presses()) {
             gameState = "start";
             allSprites.deleteAll();
@@ -358,6 +365,7 @@ function draw() {
             titleRun();
         }
 
+        //Restarts the game
         if (restartButton.mouse.presses()) {
             
             score = 0;
@@ -389,6 +397,7 @@ function draw() {
         text("Score: ", width / 2.5, height / 1.5);
         text(score, width / 2, height / 1.5);
 
+        //Takes user to Start Screen
         if (homeButton.mouse.presses()) {
             gameState = "start";
             allSprites.deleteAll();
@@ -400,6 +409,7 @@ function draw() {
             titleRun();
         }
 
+        //Restarts Game
         if (restartButton.mouse.presses()) {
             allSprites.deleteAll();
 
