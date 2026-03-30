@@ -19,10 +19,7 @@ function preload() {
 
     back = loadImage('Images/BACK.png');
     home = loadImage('Images/HOME.png');
-    pause = loadImage('Images/PAUSE.png');
     restart = loadImage('Images/RESTART.png');
-    resume = loadImage('Images/RESUME.png');
-    settings = loadImage('Images/SETTINGS.png');
 
     mercury = loadImage('Images/MERCURY.png');
     venus = loadImage('Images/VENUS.png');
@@ -37,6 +34,9 @@ function preload() {
     BGimg = loadImage('Images/SPACE.png');
 }
 
+
+
+
 function setup() {
     console.log("setup");
 
@@ -44,9 +44,7 @@ function setup() {
     cnv = createCanvas(windowWidth, windowHeight);
     cnv.position((windowWidth / 2) - (width / 2), (windowHeight / 2) - (height / 2));
 
-    startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
-    startButton.img = start;
-    startButton.scale = 0.3;
+    startRun();
 
     controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
     controlButton.img = controls;
@@ -54,9 +52,9 @@ function setup() {
 
     titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
     titleText.img = title;
-    titleText.scale = 0.4;
+    titleText.scale = 0.3;
 
-    //world.gravity.y = 13;
+    world.gravity.y = 12;
 
     gameState = "start";
 
@@ -65,11 +63,10 @@ function setup() {
     nextBallSize = random(RANDOM_SIZE);
 
     lastClickTime = 0;
-
-    //titleText.debug = true;
-    //controlButton.debug = true;
-    //startButton.debug = true;
 }
+
+
+
 
 //creates walls
 function createWalls() {
@@ -98,6 +95,9 @@ function createWalls() {
     wallSplit.color = "#cd86db"
     wallSplit.opacity = 0.5;
 }
+
+
+
 
 //creates the ball
 function createNewBall(x, y, size) {
@@ -174,6 +174,37 @@ function getBallImage(size) {
     return 'white';
 }
 
+
+
+
+function startRun() {
+    startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
+    startButton.img = start;
+    startButton.scale = 0.3;
+}
+
+function controlButtonRun() {
+    controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
+    controlButton.img = controls;
+    controlButton.scale = 0.3;
+}
+
+function homeRun() {
+    homeButton = new Sprite(homeLocationX, homeLocationY, width / 2.24, height / 2.5, 'static');
+    homeButton.img = home;
+    homeButton.scale = 0.2;
+}
+
+function titleRun() {
+    titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
+    titleText.img = title;
+    titleText.scale = 0.3;
+}
+
+
+
+
+
 function draw() {
 
     clear();
@@ -188,20 +219,26 @@ function draw() {
             startButton.remove();
             controlButton.remove();
             titleText.remove();
-            homeButton = new Sprite(width / 1.52, height / 1.35, width / 2.24, height / 2.5, 'static');
-            homeButton.img = home;
-            homeButton.scale = 0.2;
-            settingsButton = new Sprite(width / 1.52, height / 1.18, width / 2.24, height / 2.5, 'static');
-            settingsButton.img = settings;
-            settingsButton.scale = 0.25;
+
+            homeLocationX = width / 1.52;
+            homeLocationY = height / 1.35
+            homeRun();
+
+            restartButton = new Sprite(width / 1.52, height / 1.17, width / 2.24, height / 2.5, 'static');
+            restartButton.img = restart;
+            restartButton.scale = 0.2;
         }
         if (controlButton.mouse.presses()) {
             gameState = "controls";
-            startButton.remove();
-            controlButton.remove();
-            titleText.remove();
+
+            allSprites.deleteAll(); // cleaner
+
             controlBox = new Sprite(width / 2, height / 2, width / 3, width / 3, 'static');
-            controlBox.color = "#a688ff"
+            controlBox.color = "#a688ff";
+
+            backButton = new Sprite(width / 2.67, height / 4.5, width / 2.24, height / 2.5, 'static');
+            backButton.img = back;
+            backButton.scale = 0.3;
         }
     }
     if (gameState == "controls") {
@@ -226,25 +263,15 @@ function draw() {
 
         text(controlsText, controlBox.x / 1.42, controlBox.y / 2, controlBox.w - 40, controlBox.h - 40);
 
-            backButton = new Sprite(width / 2.67, height / 4.5, width / 2.24, height / 2.5, 'static');
-            backButton.img = back;
-            backButton.scale = 0.3;
-
-         if (backButton.mouse.presses()) {
+        if (backButton.mouse.presses()) {
             gameState = "start";
             allSprites.deleteAll();
 
-            startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
-            startButton.img = start;
-            startButton.scale = 0.3;
+            startRun();
 
-            controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
-            controlButton.img = controls;
-            controlButton.scale = 0.3;
+            controlButtonRun();
 
-            titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
-            titleText.img = title;
-            titleText.scale = 0.4;
+            titleRun();
         }
 
     }
@@ -281,9 +308,9 @@ function draw() {
                 gameOverText.img = gameOver;
                 gameOverText.scale = 0.4;
 
-                homeButton = new Sprite(width / 2.2, height / 1.35, width / 2.24, height / 2.5, 'static');
-                homeButton.img = home;
-                homeButton.scale = 0.2;
+                homeLocationX = width / 2.2
+                homeLocationY = height / 1.35
+                homeRun();
 
                 restartButton = new Sprite(width / 1.9, height / 1.35, width / 2.24, height / 2.5, 'static');
                 restartButton.img = restart;
@@ -318,10 +345,42 @@ function draw() {
         textSize(width / 60);
         text("Next:", width / 1.57, height / 13);
         text("Score: ", width / 1.6, height / 3.6);
-        text(score, width / 1.49, height / 2.9)
+        text(score, width / 1.57, height / 2.9)
+
+        if (homeButton.mouse.presses()) {
+            gameState = "start";
+            allSprites.deleteAll();
+
+            startRun();
+
+            controlButtonRun();
+
+            titleRun();
+        }
+
+        if (restartButton.mouse.presses()) {
+            
+            score = 0;
+            dangerStartTime = null;
+            lastClickTime = millis();
+            nextBallSize = random(RANDOM_SIZE);
+
+            
+            ballGroup.deleteAll();
+           
+            homeLocationX = width / 1.52;
+            homeLocationY = height / 1.35;
+            homeRun();
+
+           
+            restartButton = new Sprite(width / 1.52, height / 1.17, width / 2.24, height / 2.5, 'static');
+            restartButton.img = restart;
+            restartButton.scale = 0.2;
+        }
 
 
     }
+
 
     if (gameState == "end") {
         fill('white');
@@ -334,17 +393,34 @@ function draw() {
             gameState = "start";
             allSprites.deleteAll();
 
-            startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
-            startButton.img = start;
-            startButton.scale = 0.3;
+            startRun();
 
-            controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
-            controlButton.img = controls;
-            controlButton.scale = 0.3;
+            controlButtonRun();
 
-            titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
-            titleText.img = title;
-            titleText.scale = 0.4;
+            titleRun();
+        }
+
+        if (restartButton.mouse.presses()) {
+            allSprites.deleteAll();
+
+            gameState = "game";
+
+            score = 0;
+            dangerStartTime = null;
+            lastClickTime = millis();
+            nextBallSize = random(RANDOM_SIZE);
+            
+            createWalls();
+
+           
+            homeLocationX = width / 1.52;
+            homeLocationY = height / 1.35;
+            homeRun();
+
+           
+            restartButton = new Sprite(width / 1.52, height / 1.17, width / 2.24, height / 2.5, 'static');
+            restartButton.img = restart;
+            restartButton.scale = 0.2;
         }
     }
 }
