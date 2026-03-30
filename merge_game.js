@@ -38,7 +38,7 @@ function preload() {
 
 
 function setup() {
-    console.log("setup");
+    
 
     //Creates canvas
     cnv = createCanvas(windowWidth, windowHeight);
@@ -332,7 +332,7 @@ function draw() {
 
 
         //Creates ball at mouse
-        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) && mouseX < width - (width / 2.6)) {
+        if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) + 5 && mouseX < width - (width / 2.6) - 5) {
 
             alterBallX = random(-1, 1);
             console.log(alterBallX);
