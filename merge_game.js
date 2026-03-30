@@ -38,7 +38,7 @@ function preload() {
 
 
 function setup() {
-    
+
 
     //Creates canvas
     cnv = createCanvas(windowWidth, windowHeight);
@@ -279,7 +279,7 @@ function draw() {
         }
 
     }
-    
+
 
     if (gameState == "game") {
         //Draws the loose line
@@ -344,12 +344,12 @@ function draw() {
         //Preview ball
         let previewIMG = getBallImage(nextBallSize);
         imageMode(CENTER);
-        image(previewIMG, width / 1.52, height / 7, nextBallSize, nextBallSize)
+        image(previewIMG, width / 1.52, height / 7, nextBallSize, nextBallSize);
 
-        //Score
         fill('white');
         textSize(width / 60);
-        text("Next:", width / 1.57, height / 13);
+        textAlign(LEFT, BASELINE);
+        text("Ball:", width / 1.57, height / 13);
         text("Score: ", width / 1.6, height / 3.6);
         text(score, width / 1.57, height / 2.9)
 
@@ -357,6 +357,11 @@ function draw() {
         if (homeButton.mouse.presses()) {
             gameState = "start";
             allSprites.deleteAll();
+
+            score = 0;
+            dangerStartTime = null;
+            lastClickTime = millis();
+            nextBallSize = random(RANDOM_SIZE);
 
             startRun();
 
@@ -367,20 +372,20 @@ function draw() {
 
         //Restarts the game
         if (restartButton.mouse.presses()) {
-            
+
             score = 0;
             dangerStartTime = null;
             lastClickTime = millis();
             nextBallSize = random(RANDOM_SIZE);
 
-            
+
             ballGroup.deleteAll();
-           
+
             homeLocationX = width / 1.52;
             homeLocationY = height / 1.35;
             homeRun();
 
-           
+
             restartButton = new Sprite(width / 1.52, height / 1.17, width / 2.24, height / 2.5, 'static');
             restartButton.img = restart;
             restartButton.scale = 0.2;
@@ -419,15 +424,15 @@ function draw() {
             dangerStartTime = null;
             lastClickTime = millis();
             nextBallSize = random(RANDOM_SIZE);
-            
+
             createWalls();
 
-           
+
             homeLocationX = width / 1.52;
             homeLocationY = height / 1.35;
             homeRun();
 
-           
+
             restartButton = new Sprite(width / 1.52, height / 1.17, width / 2.24, height / 2.5, 'static');
             restartButton.img = restart;
             restartButton.scale = 0.2;
