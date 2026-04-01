@@ -111,9 +111,12 @@ function createNewBall(x, y, size) {
     ball.img.scale = size / ball.img.width
     ball.colider = 'circle';
 
+    //Resizes the hitbox for saturn due to rings
     if (size === 170) {
         ball.img.scale = (size * 1.7) / ball.image.width;
-    } else if (size === 210) {
+    }
+    //Resizes the hitbox for the sun due to flames
+    else if (size === 210) {
         ball.img.scale = (size * 1.5) / ball.image.width;
     } else {
         ball.img.scale = size / ball.img.width
@@ -122,8 +125,6 @@ function createNewBall(x, y, size) {
     ball.bounciness = 0.5;
     ball.friction = 5;
     ball.drag = 1;
-
-
 
     ballGroup.add(ball);
 }
@@ -136,6 +137,7 @@ function mergeBalls(ballA, ballB) {
 
         let newSize = ballA.diameter + 20;
 
+        //averages the ball X and Y
         let newX = (ballA.x + ballB.x) / 2;
         let newY = (ballA.y + ballB.y) / 2;
 
