@@ -162,6 +162,7 @@ function mergeBalls(ballA, ballB) {
     }
 }
 
+//Decides the image that the ball gets depending on the size
 function getBallImage(size) {
     if (size === 50) return mercury; //mercury
     if (size === 70) return mars; //mars
@@ -177,25 +178,28 @@ function getBallImage(size) {
 }
 
 
-
+//function for start button
 function startRun() {
     startButton = new Sprite(width / 2, height / 1.6, width / 2.24, height / 2.5, 'static');
     startButton.img = start;
     startButton.scale = 0.3;
 }
 
+//function for controls button
 function controlButtonRun() {
     controlButton = new Sprite(width / 2, height / 1.2, width / 2.24, height / 2.8, 'static');
     controlButton.img = controls;
     controlButton.scale = 0.3;
 }
 
+//function for home button
 function homeRun() {
     homeButton = new Sprite(homeLocationX, homeLocationY, width / 2.24, height / 2.5, 'static');
     homeButton.img = home;
     homeButton.scale = 0.2;
 }
 
+//function for title text
 function titleRun() {
     titleText = new Sprite(width / 2.1, height / 3.5, width / 1.5, height / 5, 'static');
     titleText.img = title;
@@ -210,8 +214,11 @@ function draw() {
 
     clear();
 
+    //background image
     imageMode(CORNER);
     image(BGimg, 0, 0, width, height);
+
+    //game is on the start screen
     if (gameState == "start") {
 
         if (startButton.mouse.presses()) {
@@ -244,7 +251,7 @@ function draw() {
         }
     }
 
-
+    //game is on the controls screen
     if (gameState == "controls") {
 
         allSprites.draw();
@@ -280,7 +287,7 @@ function draw() {
 
     }
 
-
+    //game is on the game screen
     if (gameState == "game") {
         //Draws the loose line
         stroke(255, 0, 0, 200);
@@ -291,6 +298,7 @@ function draw() {
 
         let ballAboveLine = false;
 
+        //For every ball that exists it check whether the balls are above the lose line
         for (let ball of ballGroup) {
             if (ball.y - ball.diameter / 2 < loseLineY) {
                 ballAboveLine = true;
@@ -310,6 +318,7 @@ function draw() {
                 gameState = "end";
                 allSprites.deleteAll();
 
+                //Creates the game over text
                 gameOverText = new Sprite(width / 2, height / 3, width / 1.5, height / 5, 'static');
                 gameOverText.img = gameOver;
                 gameOverText.scale = 0.4;
@@ -318,6 +327,7 @@ function draw() {
                 homeLocationY = height / 1.35
                 homeRun();
 
+                //Creates a restart button
                 restartButton = new Sprite(width / 1.9, height / 1.35, width / 2.24, height / 2.5, 'static');
                 restartButton.img = restart;
                 restartButton.scale = 0.2;
@@ -326,6 +336,7 @@ function draw() {
 
         }
 
+        //Resets the timer
         else {
             dangerStartTime = null;
         }
@@ -335,14 +346,16 @@ function draw() {
         if (mouse.presses() && mouseY < loseLineY && millis() - lastClickTime >= clickCooldown && mouseX > (width / 2) - (width / 5) + 5 && mouseX < width - (width / 2.6) - 5) {
 
             alterBallX = random(-1, 1);
-            console.log(alterBallX);
             createNewBall(mouseX + alterBallX, mouseY, nextBallSize);
+
             lastClickTime = millis();
+
             nextBallSize = random(RANDOM_SIZE);
         }
 
         //Preview ball
         let previewIMG = getBallImage(nextBallSize);
+
         imageMode(CENTER);
         image(previewIMG, width / 1.52, height / 7, nextBallSize, nextBallSize);
 
@@ -359,8 +372,11 @@ function draw() {
             allSprites.deleteAll();
 
             score = 0;
+
             dangerStartTime = null;
+
             lastClickTime = millis();
+
             nextBallSize = random(RANDOM_SIZE);
 
             startRun();
@@ -394,7 +410,7 @@ function draw() {
 
     }
 
-
+    //game is on the end screen
     if (gameState == "end") {
         fill('white');
         textSize(width / 30);
